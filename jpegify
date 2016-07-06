@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+
+require_relative 'image_result'
+require 'mini_magick'
+require 'parallel'
+require 'terminal-table'
+
+class Jpegify
+  include ActionView::Helpers::NumberHelper
+
+  def main()
+    if ARGV.length < 1
+      puts "Usage: #{$0} <image_file(s)>"
+      return -1
+    end
+
+    ARGV.each do |item|
+      basename = File.basename(item)
+      item = File.realpath(item)
+      result = []
+      original_image = ImageResult.new(item, 'ORIGINAL')
+      result << original_image
+
+      Dir.mktmpdir("jpegify-#{basename}") do |tmpdir|
+        crunch_result = Parallel.map(100.downto(80), :progress => 'Converting dat JPEG, please wait...') do |quality|
+          new_path = File.join(tmpdir, "#{basename}-#{quality}.jpg")
+          MiniMagick::Tool::Convert.new do |conv|
+            conv.quality quality
+            conv << item
+            conv << new_path
+          end
+          ImageResult.new(new_path, quality, item)
+        end
+
+        result.concat crunch_result
+        table = Terminal::Table.new do |t|
+          t << ['Quality', 'Filesize', 'Filesize reduction']
+          t << :separator
+          result.each do |image|
+            t << [image.quality, image.human_filesize, image.percent_size_reduction]
+          end
+        end
+        puts table
+        `xdg-open #{tmpdir}`
+        puts "Press any key to continue..."
+        STDIN.gets.chomp
+      end
+    end
+  end
+end
+
+if __FILE__ == $0
+  jpegify = Jpegify.new
+  jpegify.main()
+end
