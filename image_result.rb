@@ -1,6 +1,7 @@
 require 'action_view'
 require 'pp'
 
+# Represents a converted image
 class ImageResult
   include ActionView::Helpers::NumberHelper
 
@@ -18,7 +19,7 @@ class ImageResult
   end
 
   def original_filesize
-    return nil if @original == nil
+    return nil if @original.nil?
     @original_filesize ||= File.stat(@original).size
   end
 
@@ -27,7 +28,10 @@ class ImageResult
   end
 
   def percent_size_reduction
-    return nil if @original == nil
-    number_to_percentage((1.0 - (filesize.to_f / original_filesize.to_f)) * 100.0, :precision => 2)
+    return nil if @original.nil?
+    number_to_percentage(
+      (1.0 - (filesize.to_f / original_filesize.to_f)) * 100.0,
+      precision: 2
+    )
   end
 end
