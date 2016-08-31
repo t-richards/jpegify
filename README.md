@@ -12,6 +12,11 @@ When it is done converting, the program presents you with a table of the
 conversion results, along with a helpful "percent filesize reduction" column
 to assist you in making your quality choice.
 
+If you're on GNU/Linux, the program will open your default file browser via
+`xdg-open` and navigate to the directory with the `.jpg` image results. You can
+extract your desired image from this directory, or you can forget it exists and
+the whole directory will be deleted when the program finishes.
+
 # What do I need to use this?
 
  - Ruby, with bundler.
@@ -23,7 +28,7 @@ to assist you in making your quality choice.
 $ bundle install
 
 # Run the program
-$ ./jpegify.rb foo.png
+$ ./jpegify foo.png
 Converting dat JPEG, please wait...
 | ================================== | Time: 00:00:01
 +----------+----------+--------------------+
