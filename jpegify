@@ -3,11 +3,12 @@
 require_relative 'image_result'
 require 'mini_magick'
 require 'parallel'
+require 'shellwords'
 require 'terminal-table'
 
 if ARGV.empty?
   puts "Usage: #{$PROGRAM_NAME} <image_file(s)>"
-  return -1
+  Process.exit(-1)
 end
 
 ARGV.each do |item|
@@ -18,7 +19,8 @@ ARGV.each do |item|
   result << original_image
 
   Dir.mktmpdir("jpegify-#{basename}") do |tmpdir|
-    crunch_result = Parallel.map(100.downto(80), progress: 'Converting dat JPEG, please wait...') do |quality|
+    opts = { progress: 'Converting dat JPEG, please wait...' }
+    crunch_result = Parallel.map(100.downto(80), opts) do |quality|
       new_path = File.join(tmpdir, "#{basename}-#{quality}.jpg")
       MiniMagick::Tool::Convert.new do |conv|
         conv.quality quality
@@ -37,7 +39,9 @@ ARGV.each do |item|
       end
     end
     puts table
-    `xdg-open #{tmpdir}`
+
+    open_cmd = Shellwords.join(['xdg-open', tmpdir])
+    `#{open_cmd}`
     puts 'Press any key to continue...'
     STDIN.gets.chomp
   end

@@ -1,10 +1,7 @@
-require 'action_view'
-require 'pp'
+require 'active_support/all'
 
 # Represents a converted image
 class ImageResult
-  include ActionView::Helpers::NumberHelper
-
   attr_accessor :filename
   attr_accessor :quality
 
@@ -24,14 +21,13 @@ class ImageResult
   end
 
   def human_filesize
-    number_to_human_size filesize
+    filesize.to_s(:human_size)
   end
 
   def percent_size_reduction
     return nil if @original.nil?
-    number_to_percentage(
-      (1.0 - (filesize.to_f / original_filesize.to_f)) * 100.0,
-      precision: 2
-    )
+    (
+      (1.0 - (filesize.to_f / original_filesize.to_f)) * 100.0
+    ).to_s(:percentage, precision: 2)
   end
 end
