@@ -6,7 +6,7 @@ Command-line utility
 
 This is a program designed to help you make the correct choice when selecting a
 JPEG quality level. You give it a non-JPEG image (like a PNG, or BMP) and it
-will brute-force convert the image using ~20 different JPEG quality selections.
+will brute-force convert the image using 100 different JPEG quality selections.
 
 When it is done converting, the program presents you with a table of the
 conversion results, along with a helpful "percent filesize reduction" column

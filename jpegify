@@ -20,7 +20,7 @@ ARGV.each do |item|
 
   Dir.mktmpdir("jpegify-#{basename}") do |tmpdir|
     opts = { progress: 'Converting dat JPEG, please wait...' }
-    crunch_result = Parallel.map(100.downto(80), opts) do |quality|
+    crunch_result = Parallel.map(100.downto(1), opts) do |quality|
       new_path = File.join(tmpdir, "#{basename}-#{quality}.jpg")
       MiniMagick::Tool::Convert.new do |conv|
         conv.quality quality
