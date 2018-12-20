@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'activesupport', '~> 5.0.0'
+gem 'activesupport', '~> 5.0.1'
 gem 'mini_magick', '~> 4.5.1'
 gem 'parallel', '~> 1.9.0'
 gem 'ruby-progressbar', '~> 1.8.1'
