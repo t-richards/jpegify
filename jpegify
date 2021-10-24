@@ -5,6 +5,8 @@ require 'mini_magick'
 require 'parallel'
 require 'shellwords'
 require 'terminal-table'
+require 'csv'
+require 'fileutils'
 
 if ARGV.empty?
   puts "Usage: #{$PROGRAM_NAME} <image_file(s)>"
@@ -42,7 +44,17 @@ ARGV.each do |item|
 
     open_cmd = Shellwords.join(['xdg-open', tmpdir])
     `#{open_cmd}`
-    puts 'Press any key to continue...'
-    STDIN.gets.chomp
+
+    puts 'Enter a quality to replace the original'
+    quality = STDIN.gets.chomp.to_i
+    exit if quality < 1
+
+    desired = result.find{ |i| i.quality == quality }
+    new_file_name = File.basename(desired.original, File.extname(desired.original)) + '.jpg'
+    new_file_dir = File.dirname(desired.original)
+    final_complete_path = File.join(new_file_dir, new_file_name)
+
+    FileUtils.rm_f(item)
+    FileUtils.mv(desired.filename, final_complete_path)
   end
 end

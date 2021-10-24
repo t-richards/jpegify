@@ -4,6 +4,7 @@ require 'active_support/all'
 class ImageResult
   attr_accessor :filename
   attr_accessor :quality
+  attr_accessor :original
 
   def initialize(filename, quality, original = nil)
     @filename = filename
